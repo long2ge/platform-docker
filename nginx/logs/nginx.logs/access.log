@@ -891,3 +891,4 @@
 113.103.9.131 - - [01/Jun/2020:05:47:41 +0000] "GET /php.tar HTTP/1.1" 200 56809 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36" "-"
 113.103.9.131 - - [01/Jun/2020:05:47:47 +0000] "GET /redis.tar HTTP/1.1" 200 28071 "-" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36" "-"
 47.94.52.159 - - [01/Jun/2020:05:50:15 +0000] "GET / HTTP/1.0" 200 9 "-" "-" "-"
+47.101.44.59 - - [01/Jun/2020:06:43:13 +0000] "GET / HTTP/1.1" 200 9 "-" "Mozilla/5.0 chrome(windows nt/Windows NT;)Chrome" "-"
