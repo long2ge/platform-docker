@@ -1,0 +1,49 @@
+version: '3'
+
+networks:
+  backend:
+    driver: bridge
+
+services:
+  nginx:
+    container_name: nginx
+    networks:
+    - backend
+    privileged: true
+    image: nginx:1.18.0
+    ports:
+    - "80:80"
+    expose:
+    - 80
+    volumes:
+    - /root/www:/usr/share/nginx/html
+    - /root/nginx/logs/nginx.logs:/var/log/nginx
+    - /root/nginx/conf.d:/etc/nginx/conf.d
+  php-fpm:
+    container_name: php-fpm
+    networks:
+    - backend
+    privileged: true
+    image: php:7.4.6-fpm
+    expose:
+    - 9000
+    ports:
+    - "9000:9000"
+    volumes:
+    - /root/www:/usr/share/nginx/html
+    - /root/php/etc:/usr/local/etc
+    # docker run -it --name composer -v /root/www:/app --privileged=true composer composer install
+  redis:
+    container_name: redis
+    networks:
+    - backend
+    privileged: true
+    image: redis:6.0.2
+    expose:
+    - 6379
+    ports:
+    - "6379:6379"
+    volumes:
+    - /root/redis/data:/data
+    - /root/redis/config/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
