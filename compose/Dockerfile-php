@@ -20,6 +20,8 @@ ENV SWOOLE_VERSION 4.4.17
 #swoole依赖hiredis
 ENV HIREDIS_VERSION 0.14.1
 
+ENV MCRYPT_VERSION 1.0.3
+
 # 设置时间
 RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo 'Asia/Shanghai' > /etc/timezone
@@ -53,7 +55,7 @@ docker-php-ext-install -j$(nproc) zip
 RUN apt-get update && \ 
 apt-get install -y --no-install-recommends libmcrypt-dev && \
 rm -r /var/lib/apt/lists/* && \
-pecl install mcrypt-1.0.1 && \
+pecl install mcrypt-${MCRYPT_VERSION} && \
 docker-php-ext-enable mcrypt
 
 # 1.0.23 增加 opcache 扩展 
