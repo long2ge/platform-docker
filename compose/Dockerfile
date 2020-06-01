@@ -1,0 +1,133 @@
+FROM php:7.4.6-fpm
+LABEL maintainer="444533452@qq.com
+
+#docker中php扩展安装方式
+#1、PHP源码文件目录自带扩展 docker-php-ext-install直接安装
+#2、pecl扩展 因为一些扩展不包含在PHP源码文件中，PHP 的扩展库仓库中存在。用 pecl install 安装扩展，再用 docker-php-ext-enable 命令 启用扩展
+#3、其他扩展 一些既不在 PHP 源码包，也不再 PECL 扩展仓库中的扩展，可以通过下载扩展程序源码，编译安装的方式安装
+
+# 扩展版本号定义 
+
+#redis 扩展
+ENV PHPREDIS_VERSION 5.2.1
+
+#mongodb扩展
+ENV MONGODB_VERSION 1.6.16
+
+#swoole安装 如果以后用到的话，不用再安装了，4.0之后性能更好
+ENV SWOOLE_VERSION 4.4.17
+
+#swoole依赖hiredis
+ENV HIREDIS_VERSION 0.14.1
+
+# 设置时间
+RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo 'Asia/Shanghai' > /etc/timezone
+
+# 1.0.2 增加 bcmath, calendar, exif, gettext, sockets, dba, 
+# mysqli, pcntl, pdo_mysql, shmop, sysvmsg, sysvsem, sysvshm 扩展
+RUN docker-php-ext-install -j$(nproc) bcmath calendar exif gettext \
+sockets dba mysqli pcntl pdo_mysql shmop sysvmsg sysvsem sysvshm
+
+# 1.0.3 增加 bz2 扩展, 读写 bzip2（.bz2）压缩文件
+RUN apt-get update && \
+apt-get install -y --no-install-recommends libbz2-dev && \
+rm -r /var/lib/apt/lists/* && \
+docker-php-ext-install -j$(nproc) bz2
+
+
+# 1.0.5 增加 GD 扩展. 图像处理
+RUN apt-get update && \
+apt-get install -y --no-install-recommends libfreetype6-dev libjpeg62-turbo-dev libpng-dev && \
+rm -r /var/lib/apt/lists/* && \
+docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
+docker-php-ext-install -j$(nproc) gd
+
+# 1.0.6 增加 gmp 扩展, GMP
+RUN apt-get update && \
+apt-get install -y --no-install-recommends libgmp-dev && \
+rm -r /var/lib/apt/lists/* && \
+docker-php-ext-install -j$(nproc) gmp
+
+
+# 1.0.8 增加 zip 扩展
+RUN apt-get update && \
+apt-get install -y --no-install-recommends libzip-dev && \
+rm -r /var/lib/apt/lists/* && \
+docker-php-ext-install -j$(nproc) zip
+
+
+# 1.0.19 增加 mcrypt 扩展 
+RUN apt-get update && \ 
+apt-get install -y --no-install-recommends libmcrypt-dev && \
+rm -r /var/lib/apt/lists/* && \
+pecl install mcrypt-1.0.1 && \
+docker-php-ext-enable mcrypt
+
+# 1.0.23 增加 opcache 扩展 
+RUN docker-php-ext-configure opcache --enable-opcache && docker-php-ext-install opcache
+
+# Composer安装
+RUN curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/local/bin/composer \
+    && composer self-update --clean-backups
+	&& composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
+
+# Mysqli 扩展 自带 直接安装即可(当前数据库使用的mysqli查询的)
+RUN docker-php-ext-install mysqli
+
+# PDO 扩展 自带 直接安装即可
+RUN docker-php-ext-install pdo_mysql
+
+# Bcmath 扩展 自带 直接安装即可
+RUN docker-php-ext-install bcmath
+
+# Redis 扩展下载 pecl本地安装 开启扩展
+# RUN wget http://pecl.php.net/get/redis-${PHPREDIS_VERSION}.tgz -O /tmp/redis.tgz \
+#     && pecl install /tmp/redis.tgz \
+#     && rm -rf /tmp/redis.tgz \
+#     && docker-php-ext-enable redis
+
+# 1.0.22 redis 扩展
+RUN pecl install redis-${PHPREDIS_VERSION}
+RUN docker-php-ext-enable redis
+
+	
+# mongodb 扩展下载 pecl本地安装 开启扩展 前面已经通过 
+RUN wget http://pecl.php.net/get/mongodb-${MONGODB_VERSION}.tgz -O /tmp/mongodb.tgz \
+    && pecl install /tmp/mongodb.tgz \
+    && rm -rf /tmp/mongodb.tgz \
+    && docker-php-ext-enable mongodb
+
+
+# Hiredis依赖安装
+RUN wget https://github.com/redis/hiredis/archive/v${HIREDIS_VERSION}.tar.gz -O /tmp/hiredis.tar.gz \
+  && mkdir -p /tmp/hiredis \
+    && tar -xf /tmp/hiredis.tar.gz -C /tmp/hiredis --strip-components=1 \
+    && rm /tmp/hiredis.tar.gz \
+    && ( \
+        cd /tmp/hiredis \
+        && make -j$(nproc) \
+        && make install \
+        && ldconfig \
+    ) \
+    && rm -r /tmp/hiredis
+
+# Swoole 扩展安装 开启扩展
+ RUN wget https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz -O /tmp/swoole.tar.gz \
+     && mkdir -p /tmp/swoole \
+     && tar -xf /tmp/swoole.tar.gz -C /tmp/swoole --strip-components=1 \
+     && rm /tmp/swoole.tar.gz \
+     && ( \
+         cd /tmp/swoole \
+         && phpize \
+         && ./configure --enable-async-redis --enable-mysqlnd --enable-openssl --enable-http2 \
+         && make -j$(nproc) \
+         && make install \
+     ) \
+     && rm -r /tmp/swoole \
+     && docker-php-ext-enable swoole
+	
+# RUN pecl install swoole
+# RUN docker-php-ext-enable swoole
+
