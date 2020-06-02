@@ -19,8 +19,8 @@ services:
     - /work/www:/usr/share/nginx/html
     - /work/nginx/logs/nginx.logs:/var/log/nginx
     - /work/nginx/conf.d:/etc/nginx/conf.d
-  php-fpm:
-    container_name: php-fpm
+  php-fpm-platform:
+    container_name: php-fpm-platform
     networks:
     - backend
     privileged: true
@@ -34,9 +34,28 @@ services:
     - "9000:9000"
     volumes:
     - /work/www:/usr/share/nginx/html
-#    - /work/php/etc:/usr/local/etc
+    - /work/php/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
+    - /work/php/etc/php/php.ini-production:/usr/local/etc/php/php.ini-production
+    - /work/php/etc/php/php.ini-development:/usr/local/etc/php/php.ini-development
+    working_dir: /usr/share/nginx/html/platform
+  php-fpm:
+    container_name: php-fpm
+    networks:
+    - backend
+    privileged: true
+    build:
+      context: ./
+      dockerfile: Dockerfile-php
+    expose:
+    - 9000
+    ports:
+    - "9000:9000"
+    volumes:
+    - /work/www:/usr/share/nginx/html
+    - /work/php/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
+    - /work/php/etc/php/php.ini-production:/usr/local/etc/php/php.ini-production
+    - /work/php/etc/php/php.ini-development:/usr/local/etc/php/php.ini-development
     working_dir: /usr/share/nginx/html
-    # docker run -it --name composer -v /work/www:/app --privileged=true composer composer install
   redis:
     container_name: redis
     networks:
