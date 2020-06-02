@@ -34,6 +34,8 @@ RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
 RUN docker-php-ext-install -j$(nproc) bcmath calendar exif gettext \
 sockets dba mysqli pcntl pdo_mysql shmop sysvmsg sysvsem sysvshm
 
+RUN docker-php-ext-enable pcntl
+
 # 1.0.3 增加 bz2 扩展, 读写 bzip2（.bz2）压缩文件
 RUN apt-get update && \
 apt-get install -y --no-install-recommends libbz2-dev && \
