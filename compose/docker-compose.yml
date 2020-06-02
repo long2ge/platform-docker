@@ -35,7 +35,7 @@ services:
     volumes:
     - /work/www:/usr/share/nginx/html
 #    - /work/php/etc:/usr/local/etc
-    workdir: /usr/share/nginx/html
+    working_dir: /usr/share/nginx/html
     # docker run -it --name composer -v /work/www:/app --privileged=true composer composer install
   redis:
     container_name: redis
