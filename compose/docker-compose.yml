@@ -28,6 +28,27 @@ services:
       context: ./
       dockerfile: Dockerfile-php
     # image: php:7.4.6-fpm
+    # expose暴露容器给link到当前容器的容器
+    expose:
+    - 9000
+    # 绑定容器的9000端口到主机的9999端口
+    ports:
+    - "9999:9000"
+    volumes:
+    - /work/www:/usr/share/nginx/html
+    - /work/php/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
+    - /work/php/etc/php/php.ini-production:/usr/local/etc/php/php.ini-production
+    - /work/php/etc/php/php.ini-development:/usr/local/etc/php/php.ini-development
+    working_dir: /usr/share/nginx/html/platform
+  php-fpm:
+    container_name: php-fpm
+    networks:
+    - backend
+    privileged: true
+    build:
+      context: ./
+      dockerfile: Dockerfile-php
+    # image: php:7.4.6-fpm
     expose:
     - 9000
     ports:
@@ -37,7 +58,7 @@ services:
     - /work/php/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
     - /work/php/etc/php/php.ini-production:/usr/local/etc/php/php.ini-production
     - /work/php/etc/php/php.ini-development:/usr/local/etc/php/php.ini-development
-    working_dir: /usr/share/nginx/html/platform
+    working_dir: /usr/share/nginx/html
   redis:
     container_name: redis
     networks:
