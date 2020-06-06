@@ -58,7 +58,7 @@ services:
       - /work/php/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
       - /work/php/etc/php/php.ini-production:/usr/local/etc/php/php.ini-production
       - /work/php/etc/php/php.ini-development:/usr/local/etc/php/php.ini-development
-    working_dir: /usr/share/nginx/html
+    working_dir: /usr/share/nginx/html/platform
   redis:
     container_name: redis
     networks:

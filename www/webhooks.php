@@ -19,5 +19,6 @@
 	shell_exec($command);
 
 	// 启动Swoole
+    $command = "docker exec -it php-fpm-platform-swoole php artisan laravels publish";
     $command = "docker exec -it php-fpm-platform-swoole php bin/laravels start";
     shell_exec($command);
