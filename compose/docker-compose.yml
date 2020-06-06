@@ -60,7 +60,7 @@ services:
       - /work/php/etc/php/php.ini-development:/usr/local/etc/php/php.ini-development
       - /work/compose/laravels.sh:/laravels.sh
     working_dir: /usr/share/nginx/html/platform
-    entrypoint: /laravels.sh
+    entrypoint: sh /laravels.sh
   redis:
     container_name: redis
     networks:
