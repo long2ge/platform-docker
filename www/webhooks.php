@@ -17,3 +17,7 @@
 	// docker exec -it php-fpm-platform php artisan app:update
 	$command = "docker exec -it php-fpm-platform php artisan app:update";
 	shell_exec($command);
+
+	// 启动Swoole
+    $command = "docker exec -it php-fpm-platform-swoole php bin/laravels start";
+    shell_exec($command);

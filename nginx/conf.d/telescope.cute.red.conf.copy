@@ -1,15 +1,20 @@
 server {
     listen       80;
     listen  [::]:80;
-    server_name  localhost;
+    server_name  telescope.cute.red;
 
     #charset koi8-r;
     #access_log  /var/log/nginx/host.access.log  main;
-
-    location / {
-        root   /usr/share/nginx/html;
-        index  index.html index.htm;
-    }
+	
+	root /usr/share/nginx/html/platform/public;
+	
+	location = / {
+		rewrite / /api/documentation break;
+	}
+	
+	location / {
+		try_files $uri $uri/ /index.php$is_args$args;
+	}
 
     #error_page  404              /404.html;
 
@@ -29,9 +34,9 @@ server {
     # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
     #
     location ~ \.php$ {
-        fastcgi_pass   php-fpm-platform:9000;
+        fastcgi_pass   php-fpm:9000;
         fastcgi_index  index.php;
-        fastcgi_param  SCRIPT_FILENAME  /usr/share/nginx/html$fastcgi_script_name;
+        fastcgi_param  SCRIPT_FILENAME  $realpath_root$fastcgi_script_name;
         include        fastcgi_params;
     }
 

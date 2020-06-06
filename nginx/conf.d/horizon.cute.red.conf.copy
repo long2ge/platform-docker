@@ -1,7 +1,7 @@
 server {
     listen       80;
     listen  [::]:80;
-    server_name  doc.cute.red;
+    server_name  telescope.cute.red;
 
     #charset koi8-r;
     #access_log  /var/log/nginx/host.access.log  main;
