@@ -19,6 +19,7 @@ services:
       - /work/www:/usr/share/nginx/html
       - /work/nginx/logs/nginx.logs:/var/log/nginx
       - /work/nginx/conf.d:/etc/nginx/conf.d
+
   php-fpm-platform:
     container_name: php-fpm-platform
     networks:
@@ -39,6 +40,7 @@ services:
       - /work/php/etc/php/php.ini-production:/usr/local/etc/php/php.ini-production
       - /work/php/etc/php/php.ini-development:/usr/local/etc/php/php.ini-development
     working_dir: /usr/share/nginx/html/platform
+
   php-fpm-platform-swoole:
     container_name: php-fpm-platform-swoole
     networks:
@@ -61,6 +63,76 @@ services:
       - /work/compose/laravels.sh:/laravels.sh
     working_dir: /usr/share/nginx/html/platform
     entrypoint: sh /laravels.sh
+
+  php-fpm-platform-horizon:
+    container_name: php-fpm-platform-horizon
+    networks:
+      - backend
+    privileged: true
+    build:
+      context: ./
+      dockerfile: Dockerfile-php
+    # image: php:7.4.6-fpm
+    expose:
+      - 5200
+    # 绑定容器的9000端口到主机的9999端口  9999:9000
+    ports:
+      - "6200:5200"
+    volumes:
+      - /work/www:/usr/share/nginx/html
+      - /work/php/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - /work/php/etc/php/php.ini-production:/usr/local/etc/php/php.ini-production
+      - /work/php/etc/php/php.ini-development:/usr/local/etc/php/php.ini-development
+      - /work/compose/laravels.sh:/laravels.sh
+    working_dir: /usr/share/nginx/html/platform
+    entrypoint: sh /laravels.sh
+
+  php-fpm-platform-doc:
+    container_name: php-fpm-platform-doc
+    networks:
+      - backend
+    privileged: true
+    build:
+      context: ./
+      dockerfile: Dockerfile-php
+    # image: php:7.4.6-fpm
+    expose:
+      - 5200
+    # 绑定容器的9000端口到主机的9999端口  9999:9000
+    ports:
+      - "7200:5200"
+    volumes:
+      - /work/www:/usr/share/nginx/html
+      - /work/php/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - /work/php/etc/php/php.ini-production:/usr/local/etc/php/php.ini-production
+      - /work/php/etc/php/php.ini-development:/usr/local/etc/php/php.ini-development
+      - /work/compose/laravels.sh:/laravels.sh
+    working_dir: /usr/share/nginx/html/platform
+    entrypoint: sh /laravels.sh
+
+  php-fpm-platform-telescope:
+    container_name: php-fpm-platform-telescope
+    networks:
+      - backend
+    privileged: true
+    build:
+      context: ./
+      dockerfile: Dockerfile-php
+    # image: php:7.4.6-fpm
+    expose:
+      - 5200
+    # 绑定容器的9000端口到主机的9999端口  9999:9000
+    ports:
+      - "8200:5200"
+    volumes:
+      - /work/www:/usr/share/nginx/html
+      - /work/php/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - /work/php/etc/php/php.ini-production:/usr/local/etc/php/php.ini-production
+      - /work/php/etc/php/php.ini-development:/usr/local/etc/php/php.ini-development
+      - /work/compose/laravels.sh:/laravels.sh
+    working_dir: /usr/share/nginx/html/platform
+    entrypoint: sh /laravels.sh
+
   redis:
     container_name: redis
     networks:

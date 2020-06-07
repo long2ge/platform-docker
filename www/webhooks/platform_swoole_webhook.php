@@ -9,6 +9,27 @@
 $http = new Swoole\Http\Server("0.0.0.0", 9501);
 $http->on('request', function ($request, $response) {
 
+    /**
+     *  维护脚本
+     *   vi etc/supervisord.d/xxxx.ini
+     *  [program:laravel-s-test]
+     *  directory=/var/wwww/laravel-s-test
+     *  command=/usr/local/bin/php bin/laravels start -i
+     *  numprocs=1
+     *  autostart=true
+     *  autorestart=true
+     *  startretries=3
+     *  user=www-data
+     *  redirect_stderr=true
+     *  stdout_logfile=/var/log/supervisor/%(program_name)s.log
+     *
+     *  systemctl start supervisord
+     *
+     *  supervisorctl reread (首次,重新读取配置)
+     *
+     *  supervisorctl start webhook
+     */
+
     $commands = [
         'git pull', // 拉代码
         'docker run --rm php-fpm-platform composer install',
