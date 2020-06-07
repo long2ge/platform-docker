@@ -27,7 +27,6 @@ services:
     privileged: true
     build:
       context: ./
-      image: image-php-fpm-platform
       dockerfile: Dockerfile-php
     # image: php:7.4.6-fpm
     # expose暴露容器给link到当前容器的容器
@@ -49,7 +48,6 @@ services:
     privileged: true
     build:
       context: ./
-      image: image-php-fpm-platform-swoole
       dockerfile: Dockerfile-php
     # image: php:7.4.6-fpm
     expose:
@@ -73,7 +71,6 @@ services:
     privileged: true
     build:
       context: ./
-      image: image-php-fpm-platform-horizon
       dockerfile: Dockerfile-php
     # image: php:7.4.6-fpm
     expose:
@@ -97,7 +94,6 @@ services:
     privileged: true
     build:
       context: ./
-      image: image-php-fpm-platform-doc
       dockerfile: Dockerfile-php
     # image: php:7.4.6-fpm
     expose:
@@ -121,7 +117,6 @@ services:
     privileged: true
     build:
       context: ./
-      image: image-php-fpm-platform-telescope
       dockerfile: Dockerfile-php
     # image: php:7.4.6-fpm
     expose:
