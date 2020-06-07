@@ -45,7 +45,7 @@ $http->on('request', function ($request, $response) {
     ];
 
     foreach ($commands as $command) {
-        shell_exec($command);
+        echo shell_exec($command);
     }
 
     $response->end("ok");
