@@ -28,14 +28,17 @@ $http->on('request', function ($request, $response) {
      *  supervisorctl reread (首次,重新读取配置)
      *
      *  supervisorctl start webhook
+     *
+     * /usr/share/nginx/html/platform
      */
 
     $commands = [
         'git pull',
         'cd ../../compose',
-        'docker-compose run --rm php-fpm-platform composer install',
-        'docker-compose run --rm php-fpm-platform php artisan app:init',
-        'docker-compose run --rm php-fpm-platform php artisan app:update',
+        'docker-compose run --no-deps --rm php-fpm-platform pwd', // 测试默认访问的路径
+        'docker-compose run --no-deps --rm php-fpm-platform composer install',
+        'docker-compose run --no-deps --rm php-fpm-platform php artisan app:init',
+        'docker-compose run --no-deps --rm php-fpm-platform php artisan app:update',
         'docker-compose restart php-fpm-platform-swoole', // 启动Swoole
     ];
 
