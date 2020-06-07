@@ -31,11 +31,12 @@ $http->on('request', function ($request, $response) {
      */
 
     $commands = [
-        'git pull', // 拉代码
-        'docker run --rm compose_php-fpm-platform composer install',
-        'docker run --rm compose_php-fpm-platform php artisan app:init',
-        'docker run --rm compose_php-fpm-platform php artisan app:update',
-        'cd ../../compose && docker-compose restart php-fpm-platform-swoole', // 启动Swoole
+        'git pull',
+        'cd ../../compose',
+        'docker-compose run --rm php-fpm-platform composer install',
+        'docker-compose run --rm php-fpm-platform php artisan app:init',
+        'docker-compose run --rm php-fpm-platform php artisan app:update',
+        'docker-compose restart php-fpm-platform-swoole', // 启动Swoole
     ];
 
     foreach ($commands as $command) {
