@@ -30,6 +30,8 @@ $http->on('request', function ($request, $response) {
      *  supervisorctl start webhook
      *
      * /usr/share/nginx/html/platform
+     *
+     * docker-compose run --rm php-fpm-platform-swoole sh /laravels.sh
      */
 
     $commands = [
