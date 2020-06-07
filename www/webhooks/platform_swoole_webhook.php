@@ -35,9 +35,9 @@ $http->on('request', function ($request, $response) {
     $commands = [
         'git pull',
         'pwd',
-        'cd ../../compose',
+        'cd ../../compose', // 无效
         'pwd',
-        'docker-compose run --rm php-fpm-platform composer install',
+        'cd ../../compose && docker-compose run --rm php-fpm-platform composer install',
         'docker-compose run --rm php-fpm-platform pwd', // 测试默认访问的路径
         'docker-compose run --no-deps --rm php-fpm-platform php artisan app:init',
         'docker-compose run --no-deps --rm php-fpm-platform php artisan app:update',
