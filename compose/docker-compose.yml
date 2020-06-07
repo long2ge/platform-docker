@@ -22,12 +22,12 @@ services:
 
   php-fpm-platform:
     container_name: php-fpm-platform
-    image: image-php-fpm-platform
     networks:
       - backend
     privileged: true
     build:
       context: ./
+      image: image-php-fpm-platform
       dockerfile: Dockerfile-php
     # image: php:7.4.6-fpm
     # expose暴露容器给link到当前容器的容器
@@ -44,12 +44,12 @@ services:
 
   php-fpm-platform-swoole:
     container_name: php-fpm-platform-swoole
-    image: image-php-fpm-platform-swoole
     networks:
       - backend
     privileged: true
     build:
       context: ./
+      image: image-php-fpm-platform-swoole
       dockerfile: Dockerfile-php
     # image: php:7.4.6-fpm
     expose:
@@ -68,12 +68,12 @@ services:
 
   php-fpm-platform-horizon:
     container_name: php-fpm-platform-horizon
-    image: image-php-fpm-platform-horizon
     networks:
       - backend
     privileged: true
     build:
       context: ./
+      image: image-php-fpm-platform-horizon
       dockerfile: Dockerfile-php
     # image: php:7.4.6-fpm
     expose:
@@ -92,12 +92,12 @@ services:
 
   php-fpm-platform-doc:
     container_name: php-fpm-platform-doc
-    image: image-php-fpm-platform-doc
     networks:
       - backend
     privileged: true
     build:
       context: ./
+      image: image-php-fpm-platform-doc
       dockerfile: Dockerfile-php
     # image: php:7.4.6-fpm
     expose:
@@ -116,12 +116,12 @@ services:
 
   php-fpm-platform-telescope:
     container_name: php-fpm-platform-telescope
-    image: image-php-fpm-platform-telescope
     networks:
       - backend
     privileged: true
     build:
       context: ./
+      image: image-php-fpm-platform-telescope
       dockerfile: Dockerfile-php
     # image: php:7.4.6-fpm
     expose:
