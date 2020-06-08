@@ -128,3 +128,7 @@ RUN wget https://github.com/redis/hiredis/archive/v${HIREDIS_VERSION}.tar.gz -O 
 	
 # RUN pecl install swoole
 # RUN docker-php-ext-enable swoole
+
+# 测试工具
+RUN apt-get update && apt-get install telnet
+RUN apt-get update && apt-get install iputils-ping
