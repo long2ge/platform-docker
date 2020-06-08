@@ -5,8 +5,8 @@ networks:
     driver: bridge
 
 services:
-  nginx:
-    container_name: nginx
+  nginx-php:
+    container_name: nginx-php
 #    network_mode: host
     networks:
       - backend
@@ -71,8 +71,8 @@ services:
     depends_on:
       - redis
 
-  redis:
-    container_name: redis
+  redis-php:
+    container_name: redis-php
 #    network_mode: host
     networks:
       - backend
