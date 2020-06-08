@@ -54,6 +54,7 @@ services:
     # image: php:7.4.6-fpm
     expose:
       - 5200
+      - 6379
     # 绑定容器的9000端口到主机的9999端口  9999:9000
     ports:
       - "5200:5200"
@@ -65,6 +66,8 @@ services:
       - /work/compose/laravels.sh:/laravels.sh
     working_dir: /usr/share/nginx/html/platform
     entrypoint: sh /laravels.sh
+    depends_on:
+      - redis
 
   redis:
     container_name: redis
