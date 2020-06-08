@@ -20,6 +20,8 @@ services:
       - /work/www:/usr/share/nginx/html
       - /work/nginx/logs/nginx.logs:/var/log/nginx
       - /work/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - php-fpm-platform-swoole
 
 #  php-fpm-platform:
 #    container_name: php-fpm-platform
@@ -54,7 +56,6 @@ services:
     # image: php:7.4.6-fpm
     expose:
       - 5200
-      - 6379
     # 绑定容器的9000端口到主机的9999端口  9999:9000
     ports:
       - "5200:5200"
