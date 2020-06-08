@@ -7,9 +7,9 @@ networks:
 services:
   nginx:
     container_name: nginx
-    network_mode: host
-#    networks:
-#      - backend
+#    network_mode: host
+    networks:
+      - backend
     privileged: true
     image: nginx:1.18.0
     ports:
@@ -44,9 +44,9 @@ services:
 
   php-fpm-platform-swoole:
     container_name: php-fpm-platform-swoole
-    network_mode: host
-#    networks:
-#      - backend
+#    network_mode: host
+    networks:
+      - backend
     privileged: true
     build:
       context: ./
@@ -68,9 +68,9 @@ services:
 
   redis:
     container_name: redis
-    network_mode: host
-#    networks:
-#      - backend
+#    network_mode: host
+    networks:
+      - backend
     privileged: true
     image: redis:6.0.2
     expose:
