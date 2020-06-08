@@ -69,7 +69,7 @@ services:
     working_dir: /usr/share/nginx/html/platform
     entrypoint: sh /laravels.sh
     depends_on:
-      - redis
+      - redis-php
 
   redis-php:
     container_name: redis-php
