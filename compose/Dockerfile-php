@@ -10,8 +10,11 @@ LABEL maintainer="444533452@qq.com"
 RUN apt-get update && apt-get install -y wget && apt-get install openssl && apt-get install libssl-dev
 
 # 测试工具
-RUN apt-get update && apt-get install telnet
-RUN apt-get update && apt-get install iputils-ping
+RUN apt-get update && \
+apt-get install telnet
+
+RUN apt-get update && \
+apt-get install iputils-ping
 
 # 扩展版本号定义 
 
