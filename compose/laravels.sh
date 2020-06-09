@@ -1,2 +1,2 @@
-rm storage/laravels.pid
+rm -rf storage/laravels.pid
 php bin/laravels start
