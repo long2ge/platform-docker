@@ -21,7 +21,7 @@ services:
       - /work/nginx/logs/nginx.logs:/var/log/nginx
       - /work/nginx/conf.d:/etc/nginx/conf.d
     depends_on:
-      - php-fpm-platform-swoole
+      - php-fpm-platform-api
 
   php-fpm-platform-api:
     container_name: php-fpm-platform-api
