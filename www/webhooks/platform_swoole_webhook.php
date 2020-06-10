@@ -14,7 +14,7 @@ $http->on('request', function ($request, $response) {
         'docker-compose -f /work/compose/docker-compose.yml run --no-deps --rm php-fpm-platform-api composer install',
         'docker-compose -f /work/compose/docker-compose.yml run --no-deps --rm php-fpm-platform-api php artisan app:init',
         'docker-compose -f /work/compose/docker-compose.yml run --no-deps --rm php-fpm-platform-api php artisan app:update',
-        'docker-compose -f /work/compose/docker-compose.yml restart php-fpm-platform-api', // 启动Swoole
+        'docker-compose -f /work/compose/docker-compose.yml restart php-fpm-platform-swoole', // 启动Swoole
     ];
 
     foreach ($commands as $command) {
