@@ -22,9 +22,33 @@ services:
       - /work/nginx/conf.d:/etc/nginx/conf.d
     depends_on:
       - php-fpm-platform-api
+      - php-fpm-platform-swoole
 
   php-fpm-platform-api:
     container_name: php-fpm-platform-api
+    networks:
+      - backend
+    privileged: true
+    build:
+      context: ./
+      dockerfile: Dockerfile-php
+    # image: php:7.4.6-fpm
+    # expose暴露容器给link到当前容器的容器
+    expose:
+      - 9000
+    ports:
+      - "9000:9000"
+    volumes:
+      - /work/www:/usr/share/nginx/html
+      - /work/php/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - /work/php/etc/php/php.ini-production:/usr/local/etc/php/php.ini-production
+      - /work/php/etc/php/php.ini-development:/usr/local/etc/php/php.ini-development
+    working_dir: /usr/share/nginx/html/platform
+    depends_on:
+      - redis-php
+
+  php-fpm-platform-swoole:
+    container_name: php-fpm-platform-swoole
 #    network_mode: host
     networks:
       - backend
