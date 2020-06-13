@@ -47,7 +47,8 @@ services:
     volumes:
       - /work/www:/usr/share/nginx/html
     working_dir: /usr/share/nginx/html/platform-vue-admin
-    command: npm install && npm run dev
+    command: npm install
+    command: npm run dev
 
   php-fpm-platform-api:
     container_name: php-fpm-platform-api
