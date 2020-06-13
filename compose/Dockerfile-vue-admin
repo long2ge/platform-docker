@@ -1,11 +1,4 @@
-FROM node:12.18.0
+FROM node:14.4.0
 LABEL maintainer="444533452@qq.com"
 
 RUN npm config set registry https://registry.npm.taobao.org
-
-RUN  npm install
-
-RUN npm install -g http-server
-
-RUN cnpm install
-
