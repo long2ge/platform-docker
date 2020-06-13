@@ -39,15 +39,17 @@ services:
     environment:
       TZ: Asia/Shanghai
     ports:
-      - "8080:8080"
+      - "9528:9528"
     expose:
-      - 8080
+      - 9528
     stdin_open: true
     tty: true
     volumes:
       - /work/www:/usr/share/nginx/html
-    working_dir: /usr/share/nginx/html
-#    command: npm install
+    working_dir: /usr/share/nginx/html/platform-vue-admin
+    command:
+      - npm install
+      - npm run dev
 
   php-fpm-platform-api:
     container_name: php-fpm-platform-api
