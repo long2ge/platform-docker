@@ -23,6 +23,24 @@ services:
     depends_on:
       - php-fpm-platform-api
       - php-fpm-platform-swoole
+      - platform-vue-admin
+
+  platform-vue-admin:
+    container_name: platform-vue-admin
+#    network_mode: host
+    networks:
+      - backend
+    privileged: true
+    build:
+      context: ./
+      dockerfile: Dockerfile-vue-admin
+    ports:
+      - "8080:8080"
+    expose:
+      - 8080
+    volumes:
+      - /work/www:/usr/share/nginx/html
+    working_dir: /usr/share/nginx/html/platform-vue-admin
 
   php-fpm-platform-api:
     container_name: php-fpm-platform-api
