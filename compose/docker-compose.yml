@@ -12,6 +12,8 @@ services:
       - backend
     privileged: true
     image: nginx:1.18.0
+    environment:
+      TZ: Asia/Shanghai
     ports:
       - "80:80"
     expose:
@@ -34,10 +36,14 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile-vue-admin
+    environment:
+      TZ: Asia/Shanghai
     ports:
       - "8080:8080"
     expose:
       - 8080
+    stdin_open: true
+    tty: true
     volumes:
       - /work/www:/usr/share/nginx/html
     working_dir: /usr/share/nginx/html/platform-vue-admin
@@ -52,6 +58,8 @@ services:
       dockerfile: Dockerfile-php
     # image: php:7.4.6-fpm
     # expose暴露容器给link到当前容器的容器
+    environment:
+      TZ: Asia/Shanghai
     expose:
       - 9000
     ports:
@@ -75,6 +83,8 @@ services:
       context: ./
       dockerfile: Dockerfile-php
     # image: php:7.4.6-fpm
+    environment:
+      TZ: Asia/Shanghai
     expose:
       - 5200
     ports:
@@ -97,6 +107,8 @@ services:
       - backend
     privileged: true
     image: redis:6.0.2
+    environment:
+      TZ: Asia/Shanghai
     expose:
       - 6379
     ports:
