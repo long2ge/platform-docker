@@ -119,3 +119,38 @@ services:
       - /work/redis/data:/data
       - /work/redis/config/redis.conf:/usr/local/etc/redis/redis.conf
     command: redis-server /usr/local/etc/redis/redis.conf
+
+  rabbitmq:
+    container_name: rabbitmq-php
+    networks:
+      - backend
+    privileged: true
+    image: rabbitmq:3.8.5-management
+    expose:
+      - 4369
+      - 5671
+      - 5672
+      - 15672
+      - 25672
+    ports:
+      - "4369:4369"
+      - "5671:5671"
+      - "5672:5672"
+      - "15672:15672"
+      - "25672:25672"
+    hostname: rmq_node1
+    environment:
+      RABBITMQ_DEFAULT_VHOST: /
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+      RABBITMQ_LOGS: /var/lib/rabbitmq/rabbitmq.log
+      RABBITMQ_SASL_LOGS: /var/lib/rabbitmq/rabbitmq-sasl.log
+      RABBITMQ_ERLANG_COOKIE: LZJADKXKLULIXFKAALGX
+      TZ: Asia/Shanghai
+    extra_hosts: # 如果要配置虚拟主机 192.168.1.1 host11  那么下面的写法应该是 host11:192.168.1.1
+#      - "rmq_node1:172.16.11.106"
+#      - "rmq_node2:172.16.11.156"
+#      - "rmq_node3:172.16.11.206"
+    volumes:
+      - ./data/rabbitmq:/var/lib/rabbitmq
+#      - /etc/hosts:/etc/hosts

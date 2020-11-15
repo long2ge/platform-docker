@@ -8,7 +8,7 @@
 
 $http = new Swoole\Http\Server("0.0.0.0", 9501);
 $http->on('request', function ($request, $response) {
-
+    // docker-compose -f /work/compose/docker-compose.yml run --no-deps --rm php-fpm-platform-api php artisan passport:install
     // docker-compose -f /work/compose/docker-compose.yml restart platform-vue-admin
     $commands = [
         'git pull',

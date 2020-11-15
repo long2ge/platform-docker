@@ -7,13 +7,13 @@ LABEL maintainer="444533452@qq.com"
 #3、其他扩展 一些既不在 PHP 源码包，也不再 PECL 扩展仓库中的扩展，可以通过下载扩展程序源码，编译安装的方式安装
 
 
-RUN apt-get update && apt-get install -y wget && apt-get install openssl && apt-get install libssl-dev
+RUN apt-get update && apt-get install -y wget && apt-get install -y openssl && apt-get install -y libssl-dev
 
 # 测试工具
 RUN apt-get update && apt-get install -y telnet
 RUN apt-get update && apt-get install -y iputils-ping
 
-# 扩展版本号定义 
+# 扩展版本号定义
 
 #redis 扩展
 ENV PHPREDIS_VERSION 5.2.1
