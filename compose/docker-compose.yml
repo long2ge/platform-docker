@@ -3,41 +3,34 @@ version: '3'
 networks:
   backend:
     driver: bridge
-
 services:
   nginx-php:
     container_name: nginx-php
-#    network_mode: host
     networks:
       - backend
     privileged: true
     image: nginx:1.18.0
-    environment:
-      TZ: Asia/Shanghai
     ports:
       - "80:80"
     expose:
       - 80
     volumes:
-      - /work/www:/usr/share/nginx/html
-      - /work/nginx/logs/nginx.logs:/var/log/nginx
-      - /work/nginx/conf.d:/etc/nginx/conf.d
-    depends_on:
-      - php-fpm-platform-api
-      - php-fpm-platform-swoole
-      - platform-vue-admin
+      - ${ROOT_PATH}/www:/usr/share/nginx/html
+      - ${ROOT_PATH}/nginx/logs/nginx.logs:/var/log/nginx
+      - ${ROOT_PATH}/nginx/conf.d:/etc/nginx/conf.d
+    # depends_on:
+    #   - php-fpm
+    #   - php-swoole
+    #   - vue-admin
 
-  platform-vue-admin:
-    container_name: platform-vue-admin
-#    network_mode: host
+  vue-admin:
+    container_name: vue-admin
     networks:
       - backend
     privileged: true
     build:
       context: ./
       dockerfile: Dockerfile-vue-admin
-    environment:
-      TZ: Asia/Shanghai
     ports:
       - "9528:9528"
     expose:
@@ -45,13 +38,13 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - /work/www:/usr/share/nginx/html
-    working_dir: /usr/share/nginx/html/platform-vue-admin
+      - ${ROOT_PATH}/www:/usr/share/nginx/html
+    working_dir: /usr/share/nginx/html/vue-admin
     command: npm install
     command: npm run dev
 
-  php-fpm-platform-api:
-    container_name: php-fpm-platform-api
+  php-fpm:
+    container_name: php-fpm
     networks:
       - backend
     privileged: true
@@ -60,97 +53,137 @@ services:
       dockerfile: Dockerfile-php
     # image: php:7.4.6-fpm
     # expose暴露容器给link到当前容器的容器
-    environment:
-      TZ: Asia/Shanghai
     expose:
       - 9000
     ports:
       - "9000:9000"
     volumes:
-      - /work/www:/usr/share/nginx/html
-      - /work/php/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
-      - /work/php/etc/php/php.ini-production:/usr/local/etc/php/php.ini-production
-      - /work/php/etc/php/php.ini-development:/usr/local/etc/php/php.ini-development
+      - ${ROOT_PATH}/www:/usr/share/nginx/html
+      - ${ROOT_PATH}/php/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ${ROOT_PATH}/php/etc/php/php.ini-production:/usr/local/etc/php/php.ini-production
+      - ${ROOT_PATH}/php/etc/php/php.ini-development:/usr/local/etc/php/php.ini-development
     working_dir: /usr/share/nginx/html/platform
-    depends_on:
-      - redis-php
+    # depends_on:
+    #   - redis-php
 
-  php-fpm-platform-swoole:
-    container_name: php-fpm-platform-swoole
-#    network_mode: host
+  php-swoole:
+    container_name: php-swoole
     networks:
       - backend
     privileged: true
     build:
       context: ./
       dockerfile: Dockerfile-php
-    # image: php:7.4.6-fpm
-    environment:
-      TZ: Asia/Shanghai
     expose:
       - 5200
     ports:
       - "5200:5200"
     volumes:
-      - /work/www:/usr/share/nginx/html
-      - /work/php/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
-      - /work/php/etc/php/php.ini-production:/usr/local/etc/php/php.ini-production
-      - /work/php/etc/php/php.ini-development:/usr/local/etc/php/php.ini-development
-      - /work/compose/laravels.sh:/laravels.sh
+      - ${ROOT_PATH}/www:/usr/share/nginx/html
+      - ${ROOT_PATH}/php/etc/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ${ROOT_PATH}/php/etc/php/php.ini-production:/usr/local/etc/php/php.ini-production
+      - ${ROOT_PATH}/php/etc/php/php.ini-development:/usr/local/etc/php/php.ini-development
+      - ${ROOT_PATH}/compose/laravels.sh:/laravels.sh
     working_dir: /usr/share/nginx/html/platform
     entrypoint: sh /laravels.sh
-    depends_on:
-      - redis-php
+    # depends_on:
+    #   - redis-php
 
   redis-php:
     container_name: redis-php
-#    network_mode: host
     networks:
       - backend
     privileged: true
     image: redis:6.0.2
-    environment:
-      TZ: Asia/Shanghai
     expose:
       - 6379
     ports:
       - "6379:6379"
     volumes:
-      - /work/redis/data:/data
-      - /work/redis/config/redis.conf:/usr/local/etc/redis/redis.conf
+      - ${ROOT_PATH}/redis/data:/data
+      - ${ROOT_PATH}/redis/config/redis.conf:/usr/local/etc/redis/redis.conf
     command: redis-server /usr/local/etc/redis/redis.conf
 
-  rabbitmq:
-    container_name: rabbitmq-php
+  mongo-php:
+    image: mongo:4.4.2
+    container_name: mongo-php
+    hostname: mongo
+    restart: always
     networks:
       - backend
-    privileged: true
-    image: rabbitmq:3.8.5-management
-    expose:
-      - 4369
-      - 5671
-      - 5672
-      - 15672
-      - 25672
     ports:
-      - "4369:4369"
-      - "5671:5671"
-      - "5672:5672"
-      - "15672:15672"
-      - "25672:25672"
-    hostname: rmq_node1
+      - "27017:27017"
     environment:
-      RABBITMQ_DEFAULT_VHOST: /
-      RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: admin
-      RABBITMQ_LOGS: /var/lib/rabbitmq/rabbitmq.log
-      RABBITMQ_SASL_LOGS: /var/lib/rabbitmq/rabbitmq-sasl.log
-      RABBITMQ_ERLANG_COOKIE: LZJADKXKLULIXFKAALGX
       TZ: Asia/Shanghai
-    extra_hosts: # 如果要配置虚拟主机 192.168.1.1 host11  那么下面的写法应该是 host11:192.168.1.1
+      MONGO_INITDB_DATABASE: test
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+  # volumes:
+  #   - /etc/localtime:/etc/localtime
+  #   - ./data:/data/db
+  #   - ./init/:/docker-entrypoint-initdb.d/
+  # command: mongod
+  
+# 未写完
+  mysql-php:
+    image: mysql:8.0.22
+    container_name: mysql-php
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 3g
+    #   restart_policy:
+    #     condition: on-failure
+    ports:
+    - 3306:3306
+    command: 
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
+    environment:
+    - MYSQL_ROOT_PASSWORD=root
+    # volumes:
+    # - /etc/localtime:/etc/localtime:ro
+    # - volumes.mysql8.data:/var/lib/mysql
+    # configs:
+    # - source: cfg_mysql
+    #   target: /etc/mysql/my.cnf
+
+
+
+  # rabbitmq:
+  #   container_name: rabbitmq-php
+  #   networks:
+  #     - backend
+  #   privileged: true
+  #   image: rabbitmq:3.8.5-management
+  #   expose:
+  #     - 4369
+  #     - 5671
+  #     - 5672
+  #     - 15672
+  #     - 25672
+  #   ports:
+  #     - "4369:4369"
+  #     - "5671:5671"
+  #     - "5672:5672"
+  #     - "15672:15672"
+  #     - "25672:25672"
+  #   hostname: rmq_node1
+  #   environment:
+  #     RABBITMQ_DEFAULT_VHOST: /
+  #     RABBITMQ_DEFAULT_USER: admin
+  #     RABBITMQ_DEFAULT_PASS: admin
+  #     RABBITMQ_LOGS: /var/lib/rabbitmq/rabbitmq.log
+  #     RABBITMQ_SASL_LOGS: /var/lib/rabbitmq/rabbitmq-sasl.log
+  #     RABBITMQ_ERLANG_COOKIE: LZJADKXKLULIXFKAALGX
+  #     TZ: Asia/Shanghai
+#    extra_hosts: # 如果要配置虚拟主机 192.168.1.1 host11  那么下面的写法应该是 host11:192.168.1.1
 #      - "rmq_node1:172.16.11.106"
 #      - "rmq_node2:172.16.11.156"
 #      - "rmq_node3:172.16.11.206"
-    volumes:
-      - ./data/rabbitmq:/var/lib/rabbitmq
+    # volumes:
+    #   - ./data/rabbitmq:/var/lib/rabbitmq
 #      - /etc/hosts:/etc/hosts
